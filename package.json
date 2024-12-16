@@ -14,8 +14,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "pilotidupc.helloWorld",
-        "title": "Hello World"
+        "command": "extension.sendPrompt",
+        "title": "Enviar Prompt a Copilot"
       }
     ]
   },

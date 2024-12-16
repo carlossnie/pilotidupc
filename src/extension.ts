@@ -1,26 +1,59 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import * as https from 'http';
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+    let disposable = vscode.commands.registerCommand('extension.sendPrompt', async () => {
+        const editor = vscode.window.activeTextEditor;
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "pilotidupc" is now active!');
+        if (editor) {
+            const fileName = editor.document.fileName;
+            const prompt = await getPromptFromPython(fileName);
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	const disposable = vscode.commands.registerCommand('pilotidupc.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from Pilot!');
-	});
+            if (prompt) {
+                editor.edit(editBuilder => {
+                    const position = editor.selection.active;
+                    editBuilder.insert(position, prompt);
+                });
+            }
+        }
+    });
 
-	context.subscriptions.push(disposable);
+    context.subscriptions.push(disposable);
 }
 
-// This method is called when your extension is deactivated
+async function getPromptFromPython(fileName: string): Promise<string | null> {
+    return new Promise((resolve, reject) => {
+        const options = {
+            hostname: 'localhost',
+            port: 5000,
+            path: '/generate_prompt',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        };
+
+        const req = https.request(options, res => {
+            let data = '';
+
+            res.on('data', chunk => {
+                data += chunk;
+            });
+
+            res.on('end', () => {
+                try {
+                    const response = JSON.parse(data);
+                    resolve(response.prompt);
+                } catch (error) {
+                    reject(error);
+                }
+            });
+        });
+
+        req.on('error', error => reject(error));
+        req.write(JSON.stringify({ file_name: fileName }));
+        req.end();
+    });
+}
+
 export function deactivate() {}
