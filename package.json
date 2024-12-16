@@ -1,41 +1,33 @@
 {
   "name": "pilotidupc",
-  "displayName": "Pilot",
-  "description": "Hackathon winner",
-  "version": "0.0.1",
+  "displayName": "PilotIDUPC",
+  "description": "Automatic Python Fibonacci generator using GitHub Copilot",
+  "version": "0.1.0",
   "engines": {
-    "vscode": "^1.96.0"
+    "vscode": "^1.75.0"
   },
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "extension.sendPrompt",
-        "title": "Enviar Prompt a Copilot"
+        "command": "pilotidupc.createFibonacci",
+        "title": "Create Fibonacci Function"
       }
     ]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile && npm run lint",
-    "lint": "eslint src",
-    "test": "vscode-test"
+    "watch": "tsc -watch -p ./"
   },
   "devDependencies": {
-    "@types/vscode": "^1.96.0",
-    "@types/mocha": "^10.0.10",
-    "@types/node": "20.x",
-    "@typescript-eslint/eslint-plugin": "^8.17.0",
-    "@typescript-eslint/parser": "^8.17.0",
-    "eslint": "^9.16.0",
-    "typescript": "^5.7.2",
-    "@vscode/test-cli": "^0.0.10",
-    "@vscode/test-electron": "^2.4.1"
-  }
+    "@types/node": "^14.x.x",
+    "@types/vscode": "^1.75.0",
+    "@types/mocha": "^10.0.1",
+    "typescript": "^4.x.x"
+  },
+  "publisher": "tu-publisher-id"
 }
